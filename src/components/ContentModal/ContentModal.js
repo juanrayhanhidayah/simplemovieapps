@@ -60,8 +60,12 @@ export default function TransitionsModal({ children, media_type, id }) {
       `https://api.themoviedb.org/3/${media_type}/${id}/videos?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`
     );
     //console.log(data.results[0].key);
-
-    setVideo(data.results[0].key);
+    const videos = data.results || [];
+    if (videos.length === 0) {
+      return console.log("key not found");
+    } else {
+      return setVideo(data.results[0].key);
+    }
   };
 
   useEffect(() => {
