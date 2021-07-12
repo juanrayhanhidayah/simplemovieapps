@@ -7,9 +7,10 @@ import "./Carousel.css";
 
 const handleDragStart = (e) => e.preventDefault();
 
-const Gallery = ({ id, media_type }) => {
-  const [credits, setCredits] = useState([]);
-  const items = credits.map((c) => (
+const Gallery = ({ data }) => {
+  const [carouselItem, setCarouselItem] = useState([])
+
+  const items = carouselItem.map((c) => (
     <div className="carouselItem">
       <img
         src={c.profile_path ? `${img_300}/${c.profile_path}` : noPicture}
@@ -33,17 +34,9 @@ const Gallery = ({ id, media_type }) => {
     },
   };
 
-  const fetchCredits = async () => {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/${media_type}/${id}/credits?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`
-    );
-    setCredits(data.cast);
-  };
-
   useEffect(() => {
-    fetchCredits();
-    // eslint-disable-next-line
-  }, []);
+    setCarouselItem(data.cast)
+  }, [data]);
 
   return (
     <AliceCarousel

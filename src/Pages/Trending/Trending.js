@@ -1,45 +1,77 @@
-import axios from "axios";
 import "./Trending.css";
 import { useEffect, useState } from "react";
 import SingleContent from "../../components/SingleContent/SingleContent";
 import CustomPagination from "../../components/Pagination/CustomPagination";
 import React from "react";
+import { Grid, Modal } from "@material-ui/core";
+import * as action from './action';
+import ModalDetailMovie from "../../components/Fragment/DetailMovie/ModalDetailMovie";
+
 const Trending = () => {
   const [page, setPage] = useState(1);
-  const [content, setContent] = useState([]);
+  const [totalPage, setTotalPage] = useState(0)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [listTrendingMovie, setListTrendingMovie] = useState([]);
+  const [detailMovie, setDetailMovie] = useState({});
+  const [cast, setCast] = useState([]);
+  const [trailer, setTrailer] = useState({});
 
   const fetchTrending = async () => {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}&page=${page}`
-    );
-    //console.log(data);
-    setContent(data.results);
+    const { data } = await action.getTrendingMovie(page)
+    setListTrendingMovie(data.results);
+    setTotalPage(data.total_pages)
   };
+
+  const handleSelectMovie = async (id, media_type) => {
+    const detailMovie = await action.getDetailMovie(id, media_type)
+    const castMovie = await action.getCredits(id, media_type)
+    const trailer = await action.getTrailer(id, media_type)
+    Promise.all([detailMovie, castMovie, trailer]).then(() => {
+      setDetailMovie(detailMovie.data)
+      setCast(castMovie.data)
+      setTrailer(trailer.data.results[0])
+      setModalOpen(true)
+    })
+  }
+
+  const handleClose = () => {
+    setModalOpen(false)
+  }
 
   useEffect(() => {
     window.scroll(0, 0);
     fetchTrending();
-    // eslint-disable-next-line
   }, [page]);
 
   return (
     <div>
       <span className="pageTitle">Trending Today</span>
-      <div className="trending">
-        {content &&
-          content.map((c) => (
+      <Grid container spacing={4}>
+        {listTrendingMovie.map((val, idx) => (
+          <Grid item lg={3} md={4} sm={2} key={idx}>
             <SingleContent
-              key={c.id}
-              id={c.id}
-              poster={c.poster_path}
-              title={c.title || c.name}
-              date={c.first_air_date || c.release_date}
-              media_type={c.media_type}
-              vote_average={c.vote_average}
+              data={val}
+              handleSelectMovie={(id, media_type) => handleSelectMovie(id, media_type)}
             />
-          ))}
-      </div>
-      <CustomPagination setPage={setPage} />
+          </Grid>
+        ))}
+      </Grid>
+      <CustomPagination
+        setPage={setPage}
+        totalPage={totalPage}
+      />
+      <Modal
+        open={modalOpen}
+        onClose={handleClose}
+      >
+        <ModalDetailMovie
+          data={detailMovie}
+          cast={cast}
+          trailer={trailer}
+          modalOpen={modalOpen}
+          handleClose={handleClose}
+        />
+      </Modal>
     </div>
   );
 };

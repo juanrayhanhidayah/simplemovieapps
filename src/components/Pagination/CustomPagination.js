@@ -8,8 +8,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function CustomPagination({ setPage, numOfPages = 10 }) {
-  // Scroll to top when page changes
+export default function CustomPagination({ setPage, totalPage }) {
   const handlePageChange = (page) => {
     setPage(page);
     window.scroll(0, 0);
@@ -23,16 +22,13 @@ export default function CustomPagination({ setPage, numOfPages = 10 }) {
         justifyContent: "center",
         marginTop: 10,
         marginBottom: 80,
-        // position: "static",
       }}
     >
       <ThemeProvider theme={darkTheme}>
         <Pagination
           onChange={(e) => handlePageChange(e.target.textContent)}
-          count={numOfPages}
+          count={totalPage}
           color="primary"
-          hideNextButton
-          hidePrevButton
         />
       </ThemeProvider>
     </div>
