@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
@@ -8,7 +7,7 @@ import "./Carousel.css";
 const handleDragStart = (e) => e.preventDefault();
 
 const Gallery = ({ data }) => {
-  const [carouselItem, setCarouselItem] = useState([])
+  const [carouselItem, setCarouselItem] = useState([]);
 
   const items = carouselItem.map((c) => (
     <div className="carouselItem">
@@ -35,7 +34,7 @@ const Gallery = ({ data }) => {
   };
 
   useEffect(() => {
-    setCarouselItem(data.cast)
+    setCarouselItem(data.cast);
   }, [data]);
 
   return (

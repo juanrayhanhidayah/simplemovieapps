@@ -1,61 +1,72 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import Genres from "../../components/Genres/Genres";
+import { useEffect, useState } from "react";
 import SingleContent from "../../components/SingleContent/SingleContent";
-import useGenre from "../../hooks/useGenre";
 import CustomPagination from "../../components/Pagination/CustomPagination";
+import React from "react";
+import { Grid, Modal } from "@material-ui/core";
+import * as action from "../Trending/action";
+import ModalDetailMovie from "../../components/Fragment/DetailMovie/ModalDetailMovie";
 
 const Movies = () => {
-  const [genres, setGenres] = useState([]);
-  const [selectedGenres, setSelectedGenres] = useState([]);
   const [page, setPage] = useState(1);
-  const [content, setContent] = useState([]);
-  const [numOfPages, setNumOfPages] = useState();
-  const genreforURL = useGenre(selectedGenres);
-  // console.log(selectedGenres);
+  const [totalPage, setTotalPage] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [listMovies, setListMovies] = useState([]);
+  const [detailMovie, setDetailMovie] = useState({});
+  const [cast, setCast] = useState([]);
+  const [trailer, setTrailer] = useState({});
 
   const fetchMovies = async () => {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_genres=${genreforURL}`
-    );
-    setContent(data.results);
-    setNumOfPages(data.total_pages);
+    const { data } = await action.getMovies(page);
+    setListMovies(data.results);
+    setTotalPage(data.total_pages);
+  };
+
+  const handleSelectMovie = async (id, media_type) => {
+    const detailMovie = await action.getDetailMovie(id, media_type);
+    const castMovie = await action.getCredits(id, media_type);
+    const trailer = await action.getTrailer(id, media_type);
+    Promise.all([detailMovie, castMovie, trailer]).then(() => {
+      setDetailMovie(detailMovie.data);
+      setCast(castMovie.data);
+      setTrailer(trailer.data.results[0]);
+      setModalOpen(true);
+    });
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
   };
 
   useEffect(() => {
     window.scroll(0, 0);
     fetchMovies();
-    // eslint-disable-next-line
-  }, [genreforURL, page]);
+  }, [page]);
 
   return (
     <div>
-      <span className="pageTitle">Discover Movies</span>
-      <Genres
-        type="movie"
-        selectedGenres={selectedGenres}
-        setSelectedGenres={setSelectedGenres}
-        genres={genres}
-        setGenres={setGenres}
-        setPage={setPage}
-      />
-      <div className="trending">
-        {content &&
-          content.map((c) => (
+      <span className="pageTitle">Movies Today</span>
+      <Grid container spacing={4}>
+        {listMovies.map((val, idx) => (
+          <Grid item lg={3} md={4} sm={2} key={idx}>
             <SingleContent
-              key={c.id}
-              id={c.id}
-              poster={c.poster_path}
-              title={c.title || c.name}
-              date={c.first_air_date || c.release_date}
-              media_type="movie"
-              vote_average={c.vote_average}
+              data={val}
+              handleSelectMovie={(id, media_type) =>
+                handleSelectMovie(id, media_type)
+              }
             />
-          ))}
-      </div>
-      {numOfPages > 1 && (
-        <CustomPagination setPage={setPage} numOfPages={numOfPages} />
-      )}
+          </Grid>
+        ))}
+      </Grid>
+      <CustomPagination setPage={setPage} totalPage={totalPage} />
+      <Modal open={modalOpen} onClose={handleClose}>
+        <ModalDetailMovie
+          data={detailMovie}
+          cast={cast}
+          trailer={trailer}
+          modalOpen={modalOpen}
+          handleClose={handleClose}
+        />
+      </Modal>
     </div>
   );
 };
