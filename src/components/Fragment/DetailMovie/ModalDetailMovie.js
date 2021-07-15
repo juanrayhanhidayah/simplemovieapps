@@ -1,5 +1,5 @@
 import React from "react";
-import {  Paper, Button } from "@material-ui/core";
+import { Paper, Button } from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import {
   img_500,
@@ -44,13 +44,9 @@ const ModalDetailMovie = ({ data, cast, trailer, modalOpen, handleClose }) => {
                 ).substring(0, 4)}
                 )
               </span>
-              {data.tagline && (
-                <i className="tagline">{data.tagline}</i>
-              )}
+              {data.tagline && <i className="tagline">{data.tagline}</i>}
 
-              <span className="ContentModal__description">
-                {data.overview}
-              </span>
+              <span className="ContentModal__description">{data.overview}</span>
 
               <div>
                 <Carousel data={cast} />
@@ -69,7 +65,7 @@ const ModalDetailMovie = ({ data, cast, trailer, modalOpen, handleClose }) => {
         </Paper>
       )}
     </Fade>
-  )
-}
+  );
+};
 
-export default ModalDetailMovie
+export default ModalDetailMovie;
