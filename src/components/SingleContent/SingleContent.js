@@ -4,9 +4,12 @@ import { img_300, unavailable } from "../../config/config";
 import "./SingleContent.css";
 
 const SingleContent = ({ data, handleSelectMovie }) => {
-  const { id, poster_path, title, date, media_type, vote_average } = data
+  const { id, poster_path, title, name, media_type, vote_average } = data;
   return (
-    <div onClick={() => handleSelectMovie(id, media_type)}>
+    <div
+      onClick={() => handleSelectMovie(id, media_type)}
+      style={{ cursor: "pointer" }}
+    >
       <Badge
         badgeContent={vote_average}
         color={vote_average > 6 ? "primary" : "secondary"}
@@ -17,11 +20,14 @@ const SingleContent = ({ data, handleSelectMovie }) => {
         alt={title}
         width="100%"
       />
-      <b className="title">{title}</b>
-      <span className="subTitle">
+      <b className="title" style={{ color: "wheat" }}>
+        {title}
+        {name}
+      </b>
+      {/* <span className="subTitle">
         {media_type === "tv" ? "TV Series" : "Movie"}
         <span className="subTitle">{date}</span>
-      </span>
+      </span> */}
     </div>
   );
 };

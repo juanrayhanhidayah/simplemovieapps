@@ -3,7 +3,7 @@ import SingleContent from "../../components/SingleContent/SingleContent";
 import CustomPagination from "../../components/Pagination/CustomPagination";
 import React from "react";
 import { Grid, Modal } from "@material-ui/core";
-import * as action from "../Trending/action";
+import * as action from "./action";
 import ModalDetailMovie from "../../components/Fragment/DetailMovie/ModalDetailMovie";
 
 const Series = () => {
@@ -28,7 +28,12 @@ const Series = () => {
     Promise.all([detailMovie, castMovie, trailer]).then(() => {
       setDetailMovie(detailMovie.data);
       setCast(castMovie.data);
-      setTrailer(trailer.data.results[0]);
+      const itemTrailer = trailer.data.results || [];
+      if (itemTrailer.length === 0) {
+        setTrailer("");
+      } else {
+        setTrailer(trailer.data.results[0]);
+      }
       setModalOpen(true);
     });
   };
