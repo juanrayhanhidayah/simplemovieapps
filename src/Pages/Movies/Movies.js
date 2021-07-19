@@ -3,7 +3,7 @@ import SingleContent from "../../components/SingleContent/SingleContent";
 import CustomPagination from "../../components/Pagination/CustomPagination";
 import React from "react";
 import { Grid, Modal } from "@material-ui/core";
-import * as action from "../Trending/action";
+import * as action from "./action";
 import ModalDetailMovie from "../../components/Fragment/DetailMovie/ModalDetailMovie";
 
 const Movies = () => {

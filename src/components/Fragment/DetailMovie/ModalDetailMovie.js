@@ -14,7 +14,7 @@ const ModalDetailMovie = ({ data, cast, trailer, modalOpen, handleClose }) => {
   return (
     <Fade in={modalOpen}>
       {data && (
-        <Paper>
+        <Paper width="90%">
           <div className="ContentModal">
             <img
               src={
@@ -60,6 +60,7 @@ const ModalDetailMovie = ({ data, cast, trailer, modalOpen, handleClose }) => {
               >
                 Watch the Trailer
               </Button>
+              <Button onClick={handleClose}>Close</Button>
             </div>
           </div>
         </Paper>
