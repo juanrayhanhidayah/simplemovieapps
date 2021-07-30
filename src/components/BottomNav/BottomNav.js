@@ -3,10 +3,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import TvIcon from "@material-ui/icons/Tv";
+import ShopIcon from "@material-ui/icons/Shop";
 import MovieIcon from "@material-ui/icons/Movie";
 import SearchIcon from "@material-ui/icons/Search";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import { useHistory } from "react-router-dom";
+import { Badge } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -32,6 +34,8 @@ export default function BottomNav() {
       history.push("/series");
     } else if (value === 3) {
       history.push("/search");
+    } else if (value === 4) {
+      history.push("/cart");
     }
   }, [value, history]);
 
@@ -64,6 +68,15 @@ export default function BottomNav() {
         label="Search"
         icon={<SearchIcon />}
       />
+      <BottomNavigationAction
+        style={{ color: "white" }}
+        label="Cart"
+        icon={
+          <Badge badgeContent={"1"} color={"primary"}>
+            <ShopIcon />
+          </Badge>
+        }
+      ></BottomNavigationAction>
     </BottomNavigation>
   );
 }
