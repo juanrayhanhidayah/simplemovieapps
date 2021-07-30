@@ -14,6 +14,7 @@ const Movies = () => {
   const [detailMovie, setDetailMovie] = useState({});
   const [cast, setCast] = useState([]);
   const [trailer, setTrailer] = useState({});
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
 
   const fetchMovies = async () => {
     const { data } = await action.getMovies(page);
@@ -32,7 +33,7 @@ const Movies = () => {
       setModalOpen(true);
     });
   };
-
+  console.log(cart)
   const handleClose = () => {
     setModalOpen(false);
   };

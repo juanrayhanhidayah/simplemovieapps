@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import SingleContent from "../../components/SingleContent/SingleContent";
 import CustomPagination from "../../components/Pagination/CustomPagination";
 import React from "react";
-import { Grid, Modal } from "@material-ui/core";
+import { Button, Grid, Modal } from "@material-ui/core";
 import * as action from "./action";
 import ModalDetailMovie from "../../components/Fragment/DetailMovie/ModalDetailMovie";
 
@@ -15,7 +15,7 @@ const Trending = () => {
   const [detailMovie, setDetailMovie] = useState({});
   const [cast, setCast] = useState([]);
   const [trailer, setTrailer] = useState({});
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
 
   const fetchTrending = async () => {
     const { data } = await action.getTrendingMovie(page);
@@ -44,6 +44,30 @@ const Trending = () => {
     fetchTrending();
   }, [page]);
 
+  const handleAddToCart = (data) => {
+    const movie = {
+      id: data.id,
+      poster_path: data.poster_path,
+      title: data.title,
+      name: data.name,
+      price: data.price,
+      vote_average: data.vote_average,
+    };
+
+    const modCart = [...cart, movie]
+
+    setCart(modCart);
+    localStorage.setItem('cart', JSON.stringify(modCart))
+  };
+
+  const handlePrice = (item) => {
+    if (item.vote_average <= 5) {
+      return 5000;
+    } else {
+      return 7500;
+    }
+  }
+
   return (
     <div>
       <span className="pageTitle">Trending Today</span>
@@ -55,9 +79,15 @@ const Trending = () => {
               handleSelectMovie={(id, media_type) =>
                 handleSelectMovie(id, media_type)
               }
-              cart={cart}
-              setCart={setCart}
+              handlePrice={handlePrice(val)}
+              handleAddToCart={(data) => handleAddToCart(data)}
             />
+            <Button
+              style={{ background: "#080e2c", color: "wheat" }}
+              onClick={() => handleAddToCart(val)}
+            >
+              Add to Cart
+            </Button>
           </Grid>
         ))}
       </Grid>
