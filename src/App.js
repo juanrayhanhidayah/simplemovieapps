@@ -7,7 +7,7 @@ import Movies from "./Pages/Movies/Movies";
 import Series from "./Pages/Series/Series";
 import Trending from "./Pages/Trending/Trending";
 import Search from "./Pages/Search/Search";
-
+import Cart from "./Pages/Cart/Cart";
 function App() {
   return (
     <div className="App">
@@ -18,6 +18,7 @@ function App() {
             <Route path="/movies" component={Movies} />
             <Route path="/series" component={Series} />
             <Route path="/search" component={Search} />
+            <Route path="/cart" component={Cart} />
           </Switch>
           <BottomNav />
         </Layout>

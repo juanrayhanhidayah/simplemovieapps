@@ -40,3 +40,11 @@
   padding: 0 2px;
   padding-bottom: 3px;
 } */
+.identity {
+  display: flex;
+  justify-content: space-between;
+}
+.button {
+  background-color: #080e2c;
+  color: wheat;
+}
