@@ -6,6 +6,7 @@ import React from "react";
 import { Button, Grid, Modal } from "@material-ui/core";
 import * as action from "./action";
 import ModalDetailMovie from "../../components/Fragment/DetailMovie/ModalDetailMovie";
+import { ExitToAppSharp } from "@material-ui/icons";
 
 const Trending = () => {
   const [page, setPage] = useState(1);
@@ -15,7 +16,9 @@ const Trending = () => {
   const [detailMovie, setDetailMovie] = useState({});
   const [cast, setCast] = useState([]);
   const [trailer, setTrailer] = useState({});
-  const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
+  const [cart, setCart] = useState(
+    JSON.parse(localStorage.getItem("cart")) || []
+  );
 
   const fetchTrending = async () => {
     const { data } = await action.getTrendingMovie(page);
@@ -45,19 +48,39 @@ const Trending = () => {
   }, [page]);
 
   const handleAddToCart = (data) => {
+    let price;
+    if (data.vote_average <= 5) {
+      price = 5000;
+    } else {
+      price = 7500;
+    }
     const movie = {
       id: data.id,
       poster_path: data.poster_path,
       title: data.title,
       name: data.name,
-      price: data.price,
+      price: price,
       vote_average: data.vote_average,
+      qty: 1,
     };
-
-    const modCart = [...cart, movie]
-
-    setCart(modCart);
-    localStorage.setItem('cart', JSON.stringify(modCart))
+    const exist = cart.find((x) => x.id === data.id);
+    // console.log(exist);
+    if (exist) {
+      setCart(
+        cart.map((item) =>
+          item.id === data.id
+            ? { ...exist, qty: exist.qty + 1, price: exist.price + movie.price }
+            : item
+        )
+      );
+      console.log(cart);
+      console.log(exist);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    } else {
+      const modCart = [...cart, movie];
+      setCart(modCart);
+      localStorage.setItem("cart", JSON.stringify(modCart));
+    }
   };
 
   const handlePrice = (item) => {
@@ -66,8 +89,7 @@ const Trending = () => {
     } else {
       return 7500;
     }
-  }
-
+  };
   return (
     <div>
       <span className="pageTitle">Trending Today</span>

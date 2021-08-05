@@ -4,8 +4,8 @@ import { img_300, unavailable } from "../../config/config";
 import { useState, useEffect, useContext } from "react";
 import "./SingleContent.css";
 
-const SingleContent = ({ data, handleSelectMovie, cart, setCart, handlePrice }) => {
-  const { id, poster_path, title, name, media_type, vote_average, } = data;
+const SingleContent = ({ data, handleSelectMovie, handlePrice }) => {
+  const { id, poster_path, title, name, media_type, vote_average } = data;
 
   return (
     <div>

@@ -7,4 +7,43 @@
   width: fit-content;
   color: black;
   background-color: rgb(18, 179, 31);
+  margin-bottom: 20px;
+}
+.btnAction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.addition {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.addition h3 {
+  color: white;
+}
+.btnAdd {
+  width: 50px;
+  height: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.btnMin {
+  width: 50px;
+  height: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.btnAction .btnRemove {
+  width: 70px;
+  height: 35px;
+  background-color: rgb(184, 30, 19);
+  color: wheat;
+}
+.subTotal {
+  color: white;
+  background-color: #080e2c;
+  margin-bottom: 100px;
+  width: fit-content;
+  padding: 10px;
 }

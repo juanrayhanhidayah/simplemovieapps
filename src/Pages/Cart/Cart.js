@@ -1,67 +1,109 @@
 import "./Cart.css";
 import { useEffect, useState } from "react";
 import React from "react";
-import { Grid, Modal } from "@material-ui/core";
-import { Badge, Button } from "@material-ui/core";
-import { img_300, unavailable } from "../../config/config";
-
+import { Grid } from "@material-ui/core";
+import { Button } from "@material-ui/core";
+import CartItem from "../../components/CartItem/CartItem";
+import DeleteIcon from "@material-ui/icons/Delete";
 const Cart = () => {
-  // const listingCart = () => {
-  //   const dataCart = JSON.parse(localStorage.getItem("cart"));
-  //   setMovieCart(dataCart);
-  // };
+  const [cart, setCart] = useState(
+    JSON.parse(localStorage.getItem("cart")) || []
+  );
 
+  // useEffect(() => {
+  //   const cart = JSON.parse(localStorage.getItem("cart"));
+  //   if (cart) {
+  //     setCart(cart);
+  //   }
+  // }, [cart]);
+  // console.log(itemCart);
+  let subTotal = cart.reduce(function (acc, curr) {
+    return acc + curr.price;
+  }, 0);
+  const removeItem = (id, e) => {
+    let index = cart.findIndex((item) => item.id === id);
+    cart.splice(index, 1);
+    setCart([...cart]);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    console.log(cart);
+    // window.location.reload();
+  };
+  const handleAddQty = (id) => {
+    const exist = cart.find((x) => x.id === id);
+    // console.log(exist);
+    let existPrice;
+    if (exist.vote_average <= 5) {
+      existPrice = 5000;
+    } else {
+      existPrice = 7500;
+    }
+    if (exist) {
+      const updated = cart.map((item) =>
+        item.id === id
+          ? { ...exist, qty: exist.qty + 1, price: item.price + existPrice }
+          : item
+      );
+      console.log(updated);
+      setCart(updated);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  };
+
+  const handleSubstractQty = (id) => {
+    const exist = cart.find((x) => x.id === id);
+    let existPrice;
+    if (exist.vote_average <= 5) {
+      existPrice = 5000;
+    } else {
+      existPrice = 7500;
+    }
+
+    if (exist.qty === 0) {
+      removeItem(id);
+    }
+    // console.log(exist);
+    if (exist) {
+      const updated = cart.map((item) =>
+        item.id === id
+          ? { ...exist, qty: exist.qty - 1, price: item.price - existPrice }
+          : item
+      );
+      console.log(updated);
+      setCart(updated);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  };
   return (
     <div>
       <span className="pageTitle">Cart</span>
-      {/* <Grid container spacing={4}>
-        {movieCart.map((item) => {
-          <Grid item lg={3} md={4} sm={2} key={item.id}>
-            <div>
-              <Badge
-                badgeContent={item.vote_average}
-                color={item.vote_average > 6 ? "primary" : "secondary"}
-              />
-              <img
-                className="poster"
-                src={
-                  item.poster_path
-                    ? `${img_300}${item.poster_path}`
-                    : unavailable
-                }
-                alt={item.title}
-                width="100%"
-                // onClick={() => handleSelectMovie(id, media_type)}
-                style={{ cursor: "pointer" }}
-              />
-              <div className="identity">
-                <b className="title" style={{ color: "wheat" }}>
-                  {item.title}
-                  {item.name}
-                </b>
-                <b
-                  className="price"
-                  style={{ color: "green", alignContent: "right" }}
-                >
-                  | IDR.{item.price}
-                </b>
-              </div>
+      <Grid container spacing={4}>
+        {cart.map((val, idx) => (
+          <Grid item lg={3} md={4} sm={2} key={idx}>
+            <CartItem data={val} />
+            <div className="btnAction">
               <Button
-                style={{ background: "#080e2c", color: "wheat" }}
-                // onClick={() =>
-                //   localStorage.setItem("cart", JSON.stringify(data))
-                // }
+                className="btnRemove"
+                onClick={(e) => removeItem(val.id, e)}
               >
-                Remove
-              </Button> */}
-      {/* <span className="subTitle">
-        {media_type === "tv" ? "TV Series" : "Movie"}
-        <span className="subTitle">{date}</span>
-      </span> */}
-      {/* </div>
-          </Grid>;
-        })}
-      </Grid> */}
+                <DeleteIcon />
+              </Button>
+              <div className="addition">
+                <button className="btnAdd" onClick={() => handleAddQty(val.id)}>
+                  +
+                </button>
+                <h3>{val.qty}</h3>
+                <button
+                  className="btnMin"
+                  onClick={() => handleSubstractQty(val.id)}
+                >
+                  -
+                </button>
+              </div>
+            </div>
+          </Grid>
+        ))}
+      </Grid>
+      <h3 className="subTotal">Subtotal: IDR.{subTotal}</h3>
     </div>
   );
 };

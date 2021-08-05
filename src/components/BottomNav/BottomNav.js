@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
@@ -22,9 +22,16 @@ const useStyles = makeStyles({
 
 export default function BottomNav() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const history = useHistory();
-
+  let count = JSON.parse(localStorage.getItem("cart")).length;
+  useEffect(() => {
+    window.addEventListener("storage", () => {
+      const item = JSON.parse(window.localStorage.getItem("cart"));
+      const length = item.length;
+      console.log(item);
+    });
+  }, []);
   useEffect(() => {
     if (value === 0) {
       history.push("/");
@@ -72,7 +79,7 @@ export default function BottomNav() {
         style={{ color: "white" }}
         label="Cart"
         icon={
-          <Badge badgeContent={"1"} color={"primary"}>
+          <Badge badgeContent={count} color={"primary"}>
             <ShopIcon />
           </Badge>
         }
